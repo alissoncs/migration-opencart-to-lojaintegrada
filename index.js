@@ -8,4 +8,5 @@ start()
     })
     .catch((err) => {
         console.info(chalk.red('Error: ' + err.message));
+        console.log(err);
     });
