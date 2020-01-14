@@ -1,8 +1,8 @@
-const assert = require('assert');
+// const assert = require('assert');
 const urljoin = require('url-join');
 const columns = require('./columns');
 
-const BASE_IMAGE_URL = 'https://galuconceito.com.br/image/';
+const BASE_IMAGE_URL = process.env.BASE_IMAGE_URL;
 
 module.exports = ({
     products,
@@ -22,12 +22,15 @@ module.exports = ({
             .filter(v => v.product_id === p.product_id)
             .map(c => c.image);
 
+        const isDestaque = false //destaques.map(e => e.toUpperCase()).includes(p.name.trim().toUpperCase());
+
         const payload = hasvars ? {
             tipo: 'com-variacao',
             sku: sku,
             usado: 'N',
             nome: p.name.trim(),
             descricao: p.description,
+            'destaque': isDestaque ? 'S' : 'N',
             ativo: String(p.status) === '1' ? 'S': 'N',
             'preco-sob-consulta': 'N',
             'categoria-nome-nivel-1': p.category_name,
@@ -44,6 +47,7 @@ module.exports = ({
             usado: 'N',
             nome: p.name.trim(),
             descricao: p.description,
+            'destaque': isDestaque ? 'S' : 'N',
             ativo: String(p.status) === '1' ? 'S': 'N',
             'preco-sob-consulta': 'N',
             'categoria-nome-nivel-1': p.category_name,
@@ -55,7 +59,8 @@ module.exports = ({
             'preco-sob-consulta': 'N',
 
             'estoque-gerenciado': 'S',
-            'estoque-situacao-em-estoque': '', //'imediata',
+            'estoque-situacao-em-estoque': 'imediata', //'imediata',
+            'estoque-situacao-sem-estoque': 'indisponivel',
             'estoque-quantidade': p.quantity,
             'altura-em-cm': '2',
             'largura-em-cm': '2',
@@ -78,11 +83,14 @@ module.exports = ({
                     'sku-pai': sku,
                     ativo: String(p.status) === '1' ? 'S': 'N',
                     'preco-cheio': p.price,
+                    'destaque': isDestaque ? 'S' : 'N',
                     'preco-promocional': p.price_promo || '',
                     'preco-sob-consulta': 'N',
 
                     'estoque-gerenciado': 'S',
-                    'estoque-situacao-em-estoque': '', //'imediata',
+                    'estoque-situacao-em-estoque': 'imediata', //'imediata',
+                    'estoque-situacao-sem-estoque': 'indisponivel',
+
                     'estoque-quantidade': v.quantity,
                     'altura-em-cm': '2',
                     'largura-em-cm': '2',
