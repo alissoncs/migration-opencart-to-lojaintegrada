@@ -1,21 +1,28 @@
 // const assert = require('assert');
 const urljoin = require('url-join');
+const assert = require('assert');
 const columns = require('./columns');
-
-const BASE_IMAGE_URL = process.env.BASE_IMAGE_URL;
 
 module.exports = ({
     products,
     variations,
     images,
-    categories,
+    APP_ID,
+    BASE_IMAGE_URL,
 }) => {
+    assert.ok(products, 'products array required');
+    assert.ok(variations, 'variations array required');
+    assert.ok(images, `images array required: ${typeof images}`);
+    assert.ok(typeof APP_ID === 'string', 'APP_ID required');
+    assert.ok(typeof BASE_IMAGE_URL === 'string', 'BASE_IMAGE_URL required');
+
+
+    console.info('BASE_IMAGE_URL', 'BASE_IMAGE_URL', BASE_IMAGE_URL);
 
     const lines = [];
-    // console.log(variations);
     products.map(p => {
         // existe variação?
-        const sku = `GALU${p.product_id}`; 
+        const sku = `${APP_ID.toUpperCase()}-${p.product_id}`; 
         const vars = variations.filter(v => v.product_id === p.product_id && v.option_value !== 'Tamanho único');
         const hasvars = vars && vars.length;
         const pimgs = images
@@ -29,12 +36,16 @@ module.exports = ({
             sku: sku,
             usado: 'N',
             nome: p.name.trim(),
-            descricao: p.description,
+            'descricao-completa': p.description,
             'destaque': isDestaque ? 'S' : 'N',
             ativo: String(p.status) === '1' ? 'S': 'N',
             'preco-sob-consulta': 'N',
             'categoria-nome-nivel-1': p.category_name,
-            'marca': '',
+            'categoria-nome-nivel-2': p.category_name2,
+            'categoria-nome-nivel-3': p.category_name3,
+            'categoria-nome-nivel-4': p.category_name4,
+            'categoria-nome-nivel-5': p.category_name5,
+            'marca': p.marca || '',
             'peso-em-kg': 1,
             
             'imagem-1': urljoin(BASE_IMAGE_URL, p.image),
@@ -46,13 +57,17 @@ module.exports = ({
             sku: sku,
             usado: 'N',
             nome: p.name.trim(),
-            descricao: p.description,
+            'descricao-completa': p.description,
             'destaque': isDestaque ? 'S' : 'N',
             ativo: String(p.status) === '1' ? 'S': 'N',
             'preco-sob-consulta': 'N',
             'categoria-nome-nivel-1': p.category_name,
-            'marca': '',
-            'peso-em-kg': 1,
+            'categoria-nome-nivel-2': p.category_name2,
+            'categoria-nome-nivel-3': p.category_name3,
+            'categoria-nome-nivel-4': p.category_name4,
+            'categoria-nome-nivel-5': p.category_name5,
+            'marca': p.marca || '',
+            'peso-em-kg': p.peso || 1,
 
             'preco-cheio': p.price,
             'preco-promocional': p.price_promo || '',
@@ -61,10 +76,10 @@ module.exports = ({
             'estoque-gerenciado': 'S',
             'estoque-situacao-em-estoque': 'imediata', //'imediata',
             'estoque-situacao-sem-estoque': 'indisponivel',
-            'estoque-quantidade': p.quantity,
-            'altura-em-cm': '2',
-            'largura-em-cm': '2',
-            'comprimento-em-cm': '2',
+            'estoque-quantidade': p.quantidade,
+            'altura-em-cm': p.altura || '2',
+            'largura-em-cm': p.largura || '2',
+            'comprimento-em-cm': p.comprimento || '2',
             
             'imagem-1': urljoin(BASE_IMAGE_URL, p.image),
             'imagem-2': pimgs[0] && urljoin(BASE_IMAGE_URL, pimgs[0]),
@@ -91,7 +106,7 @@ module.exports = ({
                     'estoque-situacao-em-estoque': 'imediata', //'imediata',
                     'estoque-situacao-sem-estoque': 'indisponivel',
 
-                    'estoque-quantidade': v.quantity,
+                    'estoque-quantidade': v.quantidade,
                     'altura-em-cm': '2',
                     'largura-em-cm': '2',
                     'comprimento-em-cm': '2',

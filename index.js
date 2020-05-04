@@ -1,12 +1,34 @@
 require('dotenv').config();
 global.chalk = require('chalk');
-const start = require('./src/start');
+const argv = require('yargs').argv;
+const assert = require('assert');
 
-start()
-    .then(() => {
-        console.info(chalk.green('Finished'));
+const startDb = require('./src/startDb');
+const startXlsx = require('./src/startXlsx');
+
+if (argv.xlsx) {
+    assert.ok(argv.file, 'File not specified');
+    assert.ok(argv.catfile, 'Category file not specified');
+    
+    startXlsx({
+        file: argv.file,
+        catfile: argv.catfile,
     })
-    .catch((err) => {
-        console.info(chalk.red('Error: ' + err.message));
-        console.log(err);
-    });
+        .then(() => {
+            console.info(chalk.green('Finished'));
+        })
+        .catch((err) => {
+            console.info(chalk.red('Error: ' + err.message));
+            console.log(err);
+        });
+} else {
+    startDb()
+        .then(() => {
+            console.info(chalk.green('Finished'));
+        })
+        .catch((err) => {
+            console.info(chalk.red('Error: ' + err.message));
+            console.log(err);
+        });
+}
+

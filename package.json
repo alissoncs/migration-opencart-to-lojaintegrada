@@ -4,13 +4,16 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@fnando/cpf": "^1.0.1",
     "argv": "^0.0.2",
     "axios": "^0.19.1",
+    "bluebird": "^3.7.2",
     "chalk": "^3.0.0",
     "dotenv": "^8.2.0",
     "knex": "^0.20.7",
     "mysql2": "^2.1.0",
     "node-xlsx": "^0.15.0",
-    "url-join": "^4.0.1"
+    "url-join": "^4.0.1",
+    "yargs": "^15.3.1"
   }
 }

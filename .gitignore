@@ -6,3 +6,5 @@ node_modules
 rundb.sh
 *.xlsx
 *.xlsx*
+
+dist/*

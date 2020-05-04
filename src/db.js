@@ -6,9 +6,6 @@ const connection = {
     // prefix: 'galu_',
 };
 
-
-console.info(connection);
-
 var knex = require('knex')({
     client: 'mysql2',
     connection, 

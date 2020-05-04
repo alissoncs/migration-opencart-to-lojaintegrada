@@ -3,7 +3,9 @@ const fs = require('fs');
 const knex = require('./db');
 const mount = require('./mount');
 
-const start = async () => {
+const BASE_IMAGE_URL = process.env.BASE_IMAGE_URL;
+
+const startDb = async () => {
 
     const query = await knex.check();
     const products = await knex
@@ -80,12 +82,14 @@ const start = async () => {
         products,
         variations,
         images,
+        BASE_IMAGE_URL,
+        APP_ID: 'GALU_EXAMPLE',
     });
 
     const buffer = xlsx.build([{name: 'export-galu-data', data: xlsxdata }]); // Returns a buffer    
-    fs.writeFile('example.xlsx', buffer, 'ascii', () => {});
+    fs.writeFile('dist/output.xlsx', buffer, 'ascii', () => {});
 
     return Promise.resolve();
 };
 
-module.exports = start;
+module.exports = startDb;
